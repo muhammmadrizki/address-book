@@ -36,72 +36,94 @@ const contacts = [
 //     `);
 // }
 
-// CREATE
-function createContact(newContact) {
-  contacts.push(newContact);
-  console.log("Contact Success");
-}
-
 // READ
-function read() {
+function displayContacts() {
+  console.log("\n=== Contact List ===");
   contacts.forEach((contact) => {
     console.log(`
     id: ${contact.id}
     name: ${contact.name}
     email: ${contact.email}
     phone: ${contact.phone}
+    address: ${contact.address || "-"}
     isAlive: ${contact.isAlive}
     `);
   });
 }
 
+// CREATE
+function createContact(newContact) {
+  const nextId = contacts.length > 0 ? contacts[contacts.length - 1].id + 1 : 1;
+  const contactToAdd = {
+    ...newContact,
+    id: nextId,
+  };
+  contacts.push(contactToAdd);
+  console.log("Contact successfully created.");
+  return contactToAdd;
+}
+
 // UPDATE
-function update(id, updateData) {
+function updateContact(id, updateData) {
   const contactIndex = contacts.findIndex((contact) => contact.id === id);
   if (contactIndex !== -1) {
-    contact[contactIndex] = { ...contacts[contactIndex], ...updateData };
-    console.log(`Contact with id ${id} updat success`);
+    contacts[contactIndex] = {
+      ...contacts[contactIndex],
+      ...updateData,
+    };
+    console.log(`Contact with id ${id} updated successfully.`);
   } else {
     console.log(`Contact with id ${id} not found.`);
   }
 }
 
-// DELETE
 function deleteContact(id) {
-  contacts = contact.filter((contact) => contact.id !== id);
-  console.log(`Contact with id ${id} delet success`);
+  const contactIndex = contacts.findIndex((contact) => contact.id === id);
+  if (contactIndex !== -1) {
+    contacts.splice(contactIndex, 1);
+    console.log(`Contact with id ${id} deleted successfully.`);
+  } else {
+    console.log(`Contact with id ${id} not found.`);
+  }
 }
-
 // Contoh pemakaian:
-// CREATE
+// -----------------
+// Start Application
+// -----------------
+
+// CREATE EXAMPLES
 createContact({
-  id: 4,
   name: "Budi",
   email: "budi@example.com",
   phone: "+6288888888",
+  address: "Jakarta",
   isAlive: true,
-}),
-  createContact({
-    id: 5,
-    name: "Mochammad",
-    email: "mochammad@example.net",
-    phone: "+629121445255",
-    isALive: false,
-  });
+});
 
 createContact({
-  id: 6,
+  name: "Mochammad",
+  email: "mochammad@example.net",
+  phone: "+629121445255",
+  address: "Jogja",
+  isAlive: false,
+});
+
+createContact({
   name: "Michael Phelps",
   email: "michael.phelps@example.net",
   phone: "+622564674",
+  address: "Baltimore, Maryland, USA",
   isAlive: true,
 });
 
 // READ
-readContact();
+displayContacts();
 
 // UPDATE
-updateContact();
+updateContact(2, { name: "Monica Bellucci", address: "Italy" });
 
 // DELETE
-deleteContact();
+deleteContact(3);
+
+// READ AGAIN TO SEE CHANGES
+displayContacts();
