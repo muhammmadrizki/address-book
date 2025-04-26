@@ -46,12 +46,16 @@ function displayContacts() {
 function createContact(newContact) {
   const nextId =
     allContacts.length > 0 ? allContacts[allContacts.length - 1].id + 1 : 1;
+
   const contactToAdd = {
-    ...newContact,
     id: nextId,
+    ...newContact,
   };
+
   allContacts.push(contactToAdd);
+
   console.log("Contact successfully created.");
+
   return contactToAdd;
 }
 
@@ -70,7 +74,6 @@ function updateContact(id, newContactData) {
 
   allContacts = updatedAllContacts;
   console.log(`Contact id:${id} has been updated`);
-  renderContacts();
 }
 
 // DELETE
@@ -82,7 +85,6 @@ function deleteContact(id) {
     allContacts = updateContacts;
     console.log(`Contact with id ${id} has been removed`);
   }
-  renderContacts();
 }
 
 // -----------------
