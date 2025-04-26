@@ -37,7 +37,6 @@ function displayContacts() {
     email: ${contact.email}
     phone: ${contact.phone}
     city: ${contact.city}
-  
     alive: ${contact.isAlive}
     `);
   });
@@ -82,16 +81,8 @@ function deleteContact(id) {
     allContacts = updateContacts;
     console.log(`Contact with id{id} contact removed`);
   }
-
-  // contactIndex = allContacts.findIndex((contact) => contact.id === id);
-  // if (contactIndex !== -1) {
-  //   allContacts.splice(contactIndex, 1);
-  //   console.log(`Contact with id ${id} deleted successfully.`);
-  // } else {
-  //   console.log(`Contact with id ${id} not found.`);
-  // }
 }
-// Contoh pemakaian:
+
 // -----------------
 // Start Application
 // -----------------
@@ -133,18 +124,12 @@ createContact({
 displayContacts();
 
 // UPDATE
-updateContact(2, { name: "Monica Bellerina", city: "Rome" });
-displayContacts();
+// updateContact(2, { name: "Monica Bellerina", city: "Rome" });
 
 // DELETE
-deleteContact(4);
-deleteContact(5);
-displayContacts();
+// deleteContact(4);
 
-// // READ AGAIN TO SEE CHANGES
-// displayContacts();
-
-//render contacts to HTML
+// Render contacts to HTML
 function renderContacts() {
   const allContactsListElement = document.getElementById("all-contacts");
 
@@ -160,9 +145,5 @@ function renderContacts() {
     })
     .join("");
 }
-
-// ---------------------------------
-// Program
-// ---------------------------------
 
 renderContacts();
