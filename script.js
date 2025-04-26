@@ -4,7 +4,7 @@ let allContacts = [
     name: "Muhammad Rizki",
     email: "muhammadrizki05@gmail.com",
     phone: "+6212345678",
-    isAlive: true,
+    age: 26,
     city: "Palembang",
   },
 
@@ -13,7 +13,7 @@ let allContacts = [
     name: "Monica",
     email: "monica@example.com",
     phone: "+6212345678",
-    isAlive: true,
+    age: 21,
     city: "Jakarta",
   },
 
@@ -22,7 +22,7 @@ let allContacts = [
     name: "Shafa",
     email: "shafana@example.co.id",
     phone: "+6253536737",
-    isAlive: false,
+    age: 30,
     city: "Bandung",
   },
 ];
@@ -37,7 +37,7 @@ function displayContacts() {
     email: ${contact.email}
     phone: ${contact.phone}
     city: ${contact.city}
-    alive: ${contact.isAlive}
+    age: ${contact.age}
     `);
   });
 }
@@ -60,8 +60,8 @@ function updateContact(id, newContactData) {
   const updatedAllContacts = allContacts.map((oneContact) => {
     if (oneContact.id === id) {
       return {
-        ...oneContact, //id, name,email,phone,city
-        ...newContactData, //name, city
+        ...oneContact,
+        ...newContactData,
       };
     } else {
       return oneContact;
@@ -70,17 +70,19 @@ function updateContact(id, newContactData) {
 
   allContacts = updatedAllContacts;
   console.log(`Contact id:${id} has been updated`);
+  renderContacts();
 }
 
-//DELETE
+// DELETE
 function deleteContact(id) {
   const updateContacts = allContacts.filter((contact) => contact.id !== id);
   if (updateContacts.length === allContacts.length) {
-    console.log(`Contact with id{id} does not exist `);
+    console.log(`Contact with id ${id} does not exist`);
   } else {
     allContacts = updateContacts;
-    console.log(`Contact with id{id} contact removed`);
+    console.log(`Contact with id ${id} has been removed`);
   }
+  renderContacts();
 }
 
 // -----------------
@@ -92,7 +94,7 @@ createContact({
   name: "Budi",
   email: "budi@example.com",
   phone: "+6288888888",
-  isAlive: true,
+  age: 35,
   city: "Bandung",
 });
 
@@ -100,7 +102,7 @@ createContact({
   name: "Mochammad",
   email: "mochammad@example.net",
   phone: "+629121445255",
-  isAlive: false,
+  age: 32,
   city: "Jogjakarta",
 });
 
@@ -108,7 +110,7 @@ createContact({
   name: "Michael Phelps",
   email: "michael.phelps@example.net",
   phone: "+622564674",
-  isAlive: true,
+  age: 18,
   city: "Baltimore, Maryland, USA",
 });
 
@@ -116,7 +118,7 @@ createContact({
   name: "Yao Ming",
   email: "yao.ming@examples.com",
   phone: "+142553647",
-  isAlive: true,
+  age: 45,
   city: "Beijing",
 });
 
@@ -139,7 +141,7 @@ function renderContacts() {
     <h2>${oneContact.name}</h2>
     <p>${oneContact.email}</p>
     <p>${oneContact.phone}</p>
-    <p>${oneContact.isAlive} </p>
+    <p>${oneContact.age} </p>
     <p>${oneContact.city}</p>
     </li>`;
     })
@@ -161,7 +163,7 @@ contactFormElement.addEventListener("submit", (event) => {
     city: String(formData.get("city")),
   };
 
-  addContact(newContactFormData);
+  createContact(newContactFormData);
 
   renderContacts();
 });
