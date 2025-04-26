@@ -146,4 +146,24 @@ function renderContacts() {
     .join("");
 }
 
+const contactFormElement = document.getElementById("contact-form");
+
+contactFormElement.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(contactFormElement);
+
+  const newContactFormData = {
+    name: String(formData.get("name")),
+    age: Number(formData.get("age")),
+    email: String(formData.get("email")),
+    phone: String(formData.get("phone")),
+    address: String(formData.get("address")),
+  };
+
+  addContact(newContactFormData);
+
+  renderContacts();
+});
+
 renderContacts();
