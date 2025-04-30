@@ -145,9 +145,19 @@ function renderContacts() {
     <p>${oneContact.phone}</p>
     <p>${oneContact.age} </p>
     <p>${oneContact.city}</p>
+    <button class="delete-button" data-id="${oneContact.id}">Delete</button>
     </li>`;
     })
     .join("");
+
+  const deleteButtons = document.querySelectorAll(".delete-button");
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const contactId = Number(event.target.getAttribute("data-id"));
+      deleteContact(contactId);
+      renderContacts();
+    });
+  });
 }
 
 const contactFormElement = document.getElementById("contact-form");
