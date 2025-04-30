@@ -87,6 +87,54 @@ function deleteContact(id) {
   }
 }
 
+// Render contacts to HTML
+
+function renderContacts() {
+  const allContactsListElement = document.getElementById("all-contacts");
+
+  allContactsListElement.innerHTML = allContacts
+    .map((oneContact) => {
+      return `<li>
+    <h2>${oneContact.name}</h2>
+    <p>${oneContact.email}</p>
+    <p>${oneContact.phone}</p>
+    <p>${oneContact.age} </p>
+    <p>${oneContact.city}</p>
+    <button class="delete-button" data-id="${oneContact.id}">Delete</button>
+    </li>`;
+    })
+    .join("");
+
+  const deleteButtons = document.querySelectorAll(".delete-button");
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const contactId = Number(event.target.getAttribute("data-id"));
+      deleteContact(contactId);
+      renderContacts();
+    });
+  });
+}
+
+function handleSubmitContactForm(event) {
+  event.preventDefault();
+
+  const formData = new FormData(contactFormElement);
+
+  const newContactFormData = {
+    name: String(formData.get("name")),
+    age: Number(formData.get("age")),
+    email: String(formData.get("email")),
+    phone: String(formData.get("phone")),
+    city: String(formData.get("city")),
+  };
+
+  createContact(newContactFormData);
+  renderContacts();
+}
+const contactFormElement = document.getElementById("contact-form");
+
+contactFormElement.addEventListener("submit", handleSubmitContactForm);
+
 // -----------------
 // Start Application
 // -----------------
@@ -132,52 +180,5 @@ displayContacts();
 
 // DELETE
 // deleteContact(4);
-
-// Render contacts to HTML
-function renderContacts() {
-  const allContactsListElement = document.getElementById("all-contacts");
-
-  allContactsListElement.innerHTML = allContacts
-    .map((oneContact) => {
-      return `<li>
-    <h2>${oneContact.name}</h2>
-    <p>${oneContact.email}</p>
-    <p>${oneContact.phone}</p>
-    <p>${oneContact.age} </p>
-    <p>${oneContact.city}</p>
-    <button class="delete-button" data-id="${oneContact.id}">Delete</button>
-    </li>`;
-    })
-    .join("");
-
-  const deleteButtons = document.querySelectorAll(".delete-button");
-  deleteButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      const contactId = Number(event.target.getAttribute("data-id"));
-      deleteContact(contactId);
-      renderContacts();
-    });
-  });
-}
-
-const contactFormElement = document.getElementById("contact-form");
-
-contactFormElement.addEventListener("submit", (event) => {
-  event.preventDefault();
-
-  const formData = new FormData(contactFormElement);
-
-  const newContactFormData = {
-    name: String(formData.get("name")),
-    age: Number(formData.get("age")),
-    email: String(formData.get("email")),
-    phone: String(formData.get("phone")),
-    city: String(formData.get("city")),
-  };
-
-  createContact(newContactFormData);
-
-  renderContacts();
-});
 
 renderContacts();
