@@ -1,126 +1,72 @@
-let allContacts = [
-  {
-    id: 1,
-    name: "Muhammad Rizki",
-    email: "muhammadrizki05@gmail.com",
-    phone: "+6212345678",
-    age: 26,
-    city: "Palembang",
-  },
+// Inisialisasi data dari localStorage
+let allContacts = JSON.parse(localStorage.getItem("contacts")) || [];
 
-  {
-    id: 2,
-    name: "Monica",
-    email: "monica@example.com",
-    phone: "+6212345678",
-    age: 21,
-    city: "Jakarta",
-  },
-
-  {
-    id: 3,
-    name: "Shafa",
-    email: "shafana@example.co.id",
-    phone: "+6253536737",
-    age: 30,
-    city: "Bandung",
-  },
-];
-
-// READ
-function displayContacts() {
-  console.log("\n=== Contact List ===");
-  allContacts.forEach((contact) => {
-    console.log(`
-    id: ${contact.id}
-    name: ${contact.name}
-    email: ${contact.email}
-    phone: ${contact.phone}
-    city: ${contact.city}
-    age: ${contact.age}
-    `);
-  });
+// Simpan ke localStorage
+function saveToLocalStorage() {
+  localStorage.setItem("contacts", JSON.stringify(allContacts));
 }
 
 // CREATE
 function createContact(newContact) {
   const nextId =
     allContacts.length > 0 ? allContacts[allContacts.length - 1].id + 1 : 1;
-
-  const contactToAdd = {
-    id: nextId,
-    ...newContact,
-  };
-
+  const contactToAdd = { id: nextId, ...newContact };
   allContacts.push(contactToAdd);
-
-  console.log("Contact successfully created.");
-
-  return contactToAdd;
+  saveToLocalStorage();
+  renderContacts();
 }
 
 // UPDATE
 function updateContact(id, newContactData) {
-  const updatedAllContacts = allContacts.map((oneContact) => {
-    if (oneContact.id === id) {
-      return {
-        ...oneContact,
-        ...newContactData,
-      };
-    } else {
-      return oneContact;
-    }
-  });
-
-  allContacts = updatedAllContacts;
-  console.log(`Contact id:${id} has been updated`);
+  allContacts = allContacts.map((contact) =>
+    contact.id === id ? { ...contact, ...newContactData } : contact
+  );
+  saveToLocalStorage();
+  renderContacts();
 }
 
 // DELETE
 function deleteContact(id) {
-  const updateContacts = allContacts.filter((contact) => contact.id !== id);
-  if (updateContacts.length === allContacts.length) {
-    console.log(`Contact with id ${id} does not exist`);
-  } else {
-    allContacts = updateContacts;
-    console.log(`Contact with id ${id} has been removed`);
-  }
+  allContacts = allContacts.filter((contact) => contact.id !== id);
+  saveToLocalStorage();
+  renderContacts();
 }
 
-// Render contacts to HTML
-
+// Render ke HTML
 function renderContacts() {
   const allContactsListElement = document.getElementById("all-contacts");
-
   allContactsListElement.innerHTML = allContacts
-    .map((oneContact) => {
-      return `<li>
-    <h2>${oneContact.name}</h2>
-    <p>${oneContact.email}</p>
-    <p>${oneContact.phone}</p>
-    <p>${oneContact.age} </p>
-    <p>${oneContact.city}</p>
-    <button class="delete-button" data-id="${oneContact.id}">Delete</button>
-    </li>`;
+    .map((contact) => {
+      return `
+        <li class="p-4 bg-white dark:bg-gray-700 shadow rounded">
+          <h2 class="text-lg font-semibold">${contact.name}</h2>
+          <p>Email: ${contact.email}</p>
+          <p>Phone: ${contact.phone}</p>
+          <p>Age: ${contact.age}</p>
+          <p>City: ${contact.city}</p>
+          <button class="delete-button mt-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" data-id="${contact.id}">
+            Delete
+          </button>
+        </li>
+      `;
     })
     .join("");
 
-  const deleteButtons = document.querySelectorAll(".delete-button");
-  deleteButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      const contactId = Number(event.target.getAttribute("data-id"));
-      deleteContact(contactId);
-      renderContacts();
+  // Event listener untuk delete
+  document.querySelectorAll(".delete-button").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = Number(e.target.getAttribute("data-id"));
+      deleteContact(id);
     });
   });
 }
 
+// Form Submit Handler
 function handleSubmitContactForm(event) {
   event.preventDefault();
 
   const formData = new FormData(contactFormElement);
-
-  const newContactFormData = {
+  const newContact = {
     name: String(formData.get("name")),
     age: Number(formData.get("age")),
     email: String(formData.get("email")),
@@ -128,57 +74,13 @@ function handleSubmitContactForm(event) {
     city: String(formData.get("city")),
   };
 
-  createContact(newContactFormData);
-  renderContacts();
+  createContact(newContact);
+  contactFormElement.reset();
 }
-const contactFormElement = document.getElementById("contact-form");
 
+// Ambil elemen form & beri event listener
+const contactFormElement = document.getElementById("contact-form");
 contactFormElement.addEventListener("submit", handleSubmitContactForm);
 
-// -----------------
-// Start Application
-// -----------------
-
-// CREATE EXAMPLES
-createContact({
-  name: "Budi",
-  email: "budi@example.com",
-  phone: "+6288888888",
-  age: 35,
-  city: "Bandung",
-});
-
-createContact({
-  name: "Mochammad",
-  email: "mochammad@example.net",
-  phone: "+629121445255",
-  age: 32,
-  city: "Jogjakarta",
-});
-
-createContact({
-  name: "Michael Phelps",
-  email: "michael.phelps@example.net",
-  phone: "+622564674",
-  age: 18,
-  city: "Baltimore, Maryland, USA",
-});
-
-createContact({
-  name: "Yao Ming",
-  email: "yao.ming@examples.com",
-  phone: "+142553647",
-  age: 45,
-  city: "Beijing",
-});
-
-// READ
-displayContacts();
-
-// UPDATE
-// updateContact(2, { name: "Monica Bellerina", city: "Rome" });
-
-// DELETE
-// deleteContact(4);
-
+// Tampilkan data saat aplikasi pertama dijalankan
 renderContacts();
